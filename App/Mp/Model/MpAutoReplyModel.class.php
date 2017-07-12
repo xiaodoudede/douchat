@@ -238,10 +238,15 @@ class MpAutoReplyModel extends Model {
 				if (!M('mp_auto_reply')->delete($data['reply_id'])) {
 					throw new \Exception('删除自动回复规则失败');
 				} else {
+					if(!M('mp_material')->delete($data['reply_id'])){
+						throw new \Exception('删除自动回复内容失败');
+					}else{
+					file_put_contents("test.txt", $data['rule_id'], FILE_APPEND);
 					M()->commit();		// 提交事务
 					$return['errcode'] = 0;
 					$return['errmsg'] = '删除自动回复成功';
 					return $return;
+					}
 				}
 			}
 		} catch (\Exception $e) {
